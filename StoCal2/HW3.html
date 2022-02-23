@@ -14585,9 +14585,9 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Code Block</span>
-<span class="c1"># Insert Packages Here</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&#39;&#39;&#39;Packages Used&#39;&#39;&#39;</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 </pre></div>
 
      </div>
@@ -15112,56 +15112,17 @@ calculations necessary and will speed up your code.</p>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">build_tree</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">s0</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">option_type</span><span class="p">):</span>
-    <span class="c1">#Creates time interval</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">walk_params</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">N</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;get time step&#39;&#39;&#39;</span>
     <span class="n">dt</span> <span class="o">=</span> <span class="n">T</span><span class="o">/</span><span class="n">N</span>
-    
-    <span class="c1">#Creates list of nodes</span>
-    <span class="n">nodes</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
-    <span class="n">tree</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">nodes</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
-    <span class="n">tree</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;node&#39;</span>
-    
-    <span class="c1">#Adds layer of each price</span>
-    <span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
-            <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-    <span class="n">tree</span><span class="p">[</span><span class="s1">&#39;layer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layers</span>
-    
-    <span class="c1">#Adds stock price</span>
-    <span class="n">tree</span><span class="p">[</span><span class="s1">&#39;stock_price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="n">prices</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
-            <span class="n">prices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s0</span> <span class="o">*</span> <span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="n">u</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="o">*</span> <span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="n">d</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="n">node</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
-    <span class="n">tree</span><span class="p">[</span><span class="s1">&#39;stock_price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prices</span>
 
-    <span class="c1">#Calculates risk-neutral probability</span>
-    <span class="n">q</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">d</span><span class="p">))</span> <span class="o">/</span> <span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="n">u</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">d</span><span class="p">))</span>
-
-    <span class="c1">#Adds hedging portfolio cols</span>
-    <span class="n">tree</span><span class="p">[</span><span class="s1">&#39;phi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">tree</span><span class="p">[</span><span class="s1">&#39;psi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="c1">#Sets initial payoff function</span>
-    <span class="k">if</span> <span class="n">option_type</span> <span class="o">==</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span>
-        <span class="n">tree</span><span class="p">[</span><span class="s1">&#39;option_value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tree</span><span class="p">[</span><span class="s1">&#39;stock_price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">-</span><span class="n">k</span> <span class="k">if</span> <span class="n">x</span><span class="o">-</span><span class="n">k</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">option_type</span> <span class="o">==</span> <span class="s1">&#39;p&#39;</span><span class="p">:</span>
-        <span class="n">tree</span><span class="p">[</span><span class="s1">&#39;option_value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tree</span><span class="p">[</span><span class="s1">&#39;stock_price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">k</span><span class="o">-</span><span class="n">x</span> <span class="k">if</span> <span class="n">k</span><span class="o">-</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
-
-    <span class="c1">#Recursive calculation back to time 0</span>
-        <span class="c1">#columns reffered to w iloc</span>
-        <span class="c1"># 4 -- Option Value</span>
-        <span class="c1"># 3 -- Psi -def- amt in rates</span>
-        <span class="c1"># 2 -- Phi -def- amt in stock</span>
-        <span class="c1"># 1 -- stock price (Delta)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)):</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">):</span>
-            <span class="n">tree</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="o">+</span> <span class="n">j</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span> <span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">q</span> <span class="o">*</span> <span class="n">tree</span><span class="p">[</span><span class="n">tree</span><span class="p">[</span><span class="s1">&#39;layer&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">q</span><span class="p">)</span> <span class="o">*</span> <span class="n">tree</span><span class="p">[</span><span class="n">tree</span><span class="p">[</span><span class="s1">&#39;layer&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
-            <span class="n">tree</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="o">+</span> <span class="n">j</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">tree</span><span class="p">[</span><span class="n">tree</span><span class="p">[</span><span class="s1">&#39;layer&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="o">-</span> <span class="n">tree</span><span class="p">[</span><span class="n">tree</span><span class="p">[</span><span class="s1">&#39;layer&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">tree</span><span class="p">[</span><span class="n">tree</span><span class="p">[</span><span class="s1">&#39;layer&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">tree</span><span class="p">[</span><span class="n">tree</span><span class="p">[</span><span class="s1">&#39;layer&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-            <span class="n">tree</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="o">+</span> <span class="n">j</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">tree</span><span class="p">[</span><span class="n">tree</span><span class="p">[</span><span class="s1">&#39;layer&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="o">-</span> <span class="n">tree</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="o">+</span> <span class="n">j</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">tree</span><span class="p">[</span><span class="n">tree</span><span class="p">[</span><span class="s1">&#39;layer&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span>
+    <span class="sd">&#39;&#39;&#39;get mean&#39;&#39;&#39;</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">u</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">d</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span>
     
-    <span class="k">return</span> <span class="n">tree</span>
+    <span class="sd">&#39;&#39;&#39;get variance&#39;&#39;&#39;</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">u</span><span class="p">)</span> <span class="o">-</span> <span class="n">mu</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dt</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span>
 </pre></div>
 
      </div>
@@ -15177,56 +15138,68 @@ calculations necessary and will speed up your code.</p>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Checking by Put - Call Parity</span>
-<span class="n">c0</span> <span class="o">=</span> <span class="n">build_tree</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span> <span class="n">s0</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1025</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">.05</span><span class="p">,</span> <span class="n">option_type</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
-<span class="n">p0</span> <span class="o">=</span> <span class="n">build_tree</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span> <span class="n">s0</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1025</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">.05</span><span class="p">,</span> <span class="n">option_type</span><span class="o">=</span><span class="s1">&#39;p&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
-</pre></div>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">build_tree</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">s0</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">option_type</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Establish time delta -- each variable represents</span>
+<span class="sd">    T - time to maturity in years</span>
+<span class="sd">    N - number of periods (i.e. time steps)&#39;&#39;&#39;</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">T</span> <span class="o">/</span> <span class="n">N</span>
 
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">c0</span><span class="o">-</span><span class="n">p0</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="mi">1000</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">.05</span><span class="o">/</span><span class="mi">60</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">59</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1025</span><span class="p">)</span>
-<span class="c1">#Put-Call Parity Holds</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+    <span class="sd">&#39;&#39;&#39;Establish up and down factos&#39;&#39;&#39;</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">mu</span><span class="o">*</span><span class="n">dt</span> <span class="o">+</span> <span class="n">sigma</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dt</span><span class="p">))</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">mu</span><span class="o">*</span><span class="n">dt</span> <span class="o">-</span> <span class="n">sigma</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dt</span><span class="p">))</span>
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+    <span class="sd">&#39;&#39;&#39;Establish risk neutral probability&#39;&#39;&#39;</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="n">r</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span> <span class="o">-</span> <span class="n">d</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">u</span> <span class="o">-</span> <span class="n">d</span><span class="p">)</span>
+    
+    <span class="sd">&#39;&#39;&#39;Constructs the data frame -- each column and its representation</span>
+<span class="sd">    index - number</span>
+<span class="sd">    layer - time step</span>
+<span class="sd">    stock_price - stock price at that node and layer</span>
+<span class="sd">    phi - shares in replicating protfolio</span>
+<span class="sd">    psi - amount of funds in money market</span>
+<span class="sd">    option value - option price at that node&#39;&#39;&#39;</span>
+    <span class="n">tree</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">2</span><span class="p">))))</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;node&#39;</span>
+    <span class="n">tree</span><span class="p">[</span><span class="s1">&#39;layer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">tree</span><span class="p">[</span><span class="s1">&#39;stock_price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">tree</span><span class="p">[</span><span class="s1">&#39;phi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">tree</span><span class="p">[</span><span class="s1">&#39;psi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="sd">&#39;&#39;&#39;inputs intial stock price&#39;&#39;&#39;</span>
+    <span class="n">tree</span><span class="p">[</span><span class="s1">&#39;stock_price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">s0</span>
+
+    <span class="sd">&#39;&#39;&#39;Inputs layers (time steps) and further stock prices&#39;&#39;&#39;</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">N</span><span class="o">+</span><span class="mi">2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">tree</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">node</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="c1">#Layer</span>
+            <span class="n">tree</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">node</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">s0</span> <span class="o">*</span> <span class="n">d</span> <span class="o">**</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">u</span> <span class="o">**</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span> <span class="c1">#Stock Price</span>
+            <span class="n">node</span> <span class="o">+=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="sd">&#39;&#39;&#39;Puts intrinsic option value in at every node&#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">option_type</span> <span class="o">==</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span>
+        <span class="n">tree</span><span class="p">[</span><span class="s1">&#39;option_value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tree</span><span class="p">[</span><span class="s1">&#39;stock_price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">-</span><span class="n">k</span> <span class="k">if</span> <span class="n">x</span><span class="o">-</span><span class="n">k</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">option_type</span> <span class="o">==</span> <span class="s1">&#39;p&#39;</span><span class="p">:</span>
+        <span class="n">tree</span><span class="p">[</span><span class="s1">&#39;option_value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tree</span><span class="p">[</span><span class="s1">&#39;stock_price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">k</span><span class="o">-</span><span class="n">x</span> <span class="k">if</span> <span class="n">k</span><span class="o">-</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="sd">&#39;&#39;&#39;resets node to N-1&#39;&#39;&#39;</span>
+    
+    <span class="n">node</span><span class="o">=</span> <span class="n">node</span> <span class="o">-</span> <span class="n">N</span>
+    
+    <span class="sd">&#39;&#39;&#39;Calculates option value and replicating portfolio going backwards&#39;&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)):</span>
+        <span class="n">tree</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">node</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">r</span><span class="o">*</span><span class="n">dt</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">q</span> <span class="o">*</span> <span class="n">tree</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">node</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">q</span><span class="p">)</span> <span class="o">*</span> <span class="n">tree</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">node</span><span class="o">+</span><span class="n">i</span><span class="p">),</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span> <span class="c1"># price option</span>
+        <span class="n">tree</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">node</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">node</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">-</span> <span class="n">tree</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">node</span><span class="o">+</span><span class="n">i</span><span class="p">),</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">node</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">-</span> <span class="n">tree</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">node</span><span class="o">+</span><span class="n">i</span><span class="p">),</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span> <span class="c1"># get delta</span>
+        <span class="n">tree</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">node</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">node</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">-</span> <span class="n">tree</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">node</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">*</span> <span class="n">tree</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">node</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">r</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span> <span class="c1"># Money Market</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">node</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span>
 
 
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>24.157012856729274
-24.15701285672924
-</pre>
+    <span class="k">return</span> <span class="n">tree</span>
+</pre></div>
+
+     </div>
 </div>
 </div>
-
-</div>
-
 </div>
 
 </div>
@@ -15248,7 +15221,10 @@ calculations necessary and will speed up your code.</p>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tree_c</span> <span class="o">=</span> <span class="n">build_tree</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span> <span class="n">s0</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1025</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">.05</span><span class="p">,</span> <span class="n">option_type</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">T</span><span class="o">=</span><span class="mi">1</span> <span class="c1"># 1 Year</span>
+<span class="n">N</span><span class="o">=</span><span class="mi">60</span> <span class="c1"># 60 Periods</span>
+<span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">walk_params</span><span class="p">(</span><span class="n">u</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span><span class="n">d</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span><span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">,</span><span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+<span class="n">tree_c</span> <span class="o">=</span> <span class="n">build_tree</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">s0</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1025</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">.05</span><span class="p">,</span> <span class="n">option_type</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
 <span class="n">tree_c</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span>
 </pre></div>
 
@@ -15267,18 +15243,34 @@ calculations necessary and will speed up your code.</p>
 <div class="jp-OutputArea-child">
 
     
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+<pre>C:\Users\jdean\AppData\Local\Programs\Python\Python39\lib\site-packages\pandas\core\indexing.py:1732: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  self._setitem_single_block(indexer, value, name)
+</pre>
+</div>
+</div>
+
+<div class="jp-OutputArea-child">
+
+    
     <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
 
 
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>layer              1.000000
-stock_price     1000.000000
-phi               -0.793419
-psi              815.160335
-option_value      27.819382
-Name: 1, dtype: float64</pre>
+<pre>layer                    0
+stock_price         1000.0
+phi               0.798915
+psi            -770.378395
+option_value     28.536695
+Name: 0, dtype: object</pre>
 </div>
 
 </div>
@@ -15294,7 +15286,7 @@ Name: 1, dtype: float64</pre>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>The price of the option is $\$27.82$</p>
+<p>The price of the option is $\$28.54$</p>
 
 </div>
 </div>
@@ -15318,7 +15310,7 @@ Name: 1, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tree_p</span> <span class="o">=</span> <span class="n">build_tree</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span> <span class="n">s0</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1025</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">.05</span><span class="p">,</span> <span class="n">option_type</span><span class="o">=</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tree_p</span> <span class="o">=</span> <span class="n">build_tree</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">s0</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1025</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">.05</span><span class="p">,</span> <span class="n">option_type</span><span class="o">=</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
 <span class="n">tree_p</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span>
 </pre></div>
 
@@ -15343,12 +15335,12 @@ Name: 1, dtype: float64</pre>
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>layer              1.000000
-stock_price     1000.000000
-phi                0.206581
-psi             -201.336395
-option_value       3.662369
-Name: 1, dtype: float64</pre>
+<pre>layer                    0
+stock_price         1000.0
+phi              -0.201085
+psi             204.652066
+option_value      3.567157
+Name: 0, dtype: object</pre>
 </div>
 
 </div>
@@ -15364,7 +15356,7 @@ Name: 1, dtype: float64</pre>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>The price of the option is $\$3.66$</p>
+<p>The price of the option is $\$3.57$</p>
 
 </div>
 </div>
@@ -15388,13 +15380,137 @@ Name: 1, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_tree_c</span> <span class="o">=</span> <span class="n">tree_c</span><span class="p">[</span><span class="n">tree_c</span><span class="p">[</span><span class="s1">&#39;layer&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">6</span><span class="p">]</span>
-<span class="n">t5_tree_p</span> <span class="o">=</span> <span class="n">tree_p</span><span class="p">[</span><span class="n">tree_p</span><span class="p">[</span><span class="s1">&#39;layer&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">6</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_tree_c</span> <span class="o">=</span> <span class="n">tree_c</span><span class="p">[</span><span class="n">tree_c</span><span class="p">[</span><span class="s1">&#39;layer&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">t5_tree_p</span> <span class="o">=</span> <span class="n">tree_p</span><span class="p">[</span><span class="n">tree_p</span><span class="p">[</span><span class="s1">&#39;layer&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">5</span><span class="p">]</span>
 </pre></div>
 
      </div>
 </div>
 </div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_tree_c</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+
+
+
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>layer</th>
+      <th>stock_price</th>
+      <th>phi</th>
+      <th>psi</th>
+      <th>option_value</th>
+    </tr>
+    <tr>
+      <th>node</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>15</th>
+      <td>5</td>
+      <td>985.089730</td>
+      <td>0.588668</td>
+      <td>-565.012023</td>
+      <td>14.879245</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>5</td>
+      <td>992.994162</td>
+      <td>0.689458</td>
+      <td>-664.711662</td>
+      <td>19.915666</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>5</td>
+      <td>1000.962018</td>
+      <td>0.777898</td>
+      <td>-752.898292</td>
+      <td>25.748231</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>5</td>
+      <td>1008.993810</td>
+      <td>0.850065</td>
+      <td>-825.435329</td>
+      <td>32.275042</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>5</td>
+      <td>1017.090049</td>
+      <td>0.904785</td>
+      <td>-880.876844</td>
+      <td>39.370538</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>5</td>
+      <td>1025.251253</td>
+      <td>0.943301</td>
+      <td>-920.214314</td>
+      <td>46.905916</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+
 </div>
 
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
@@ -15429,12 +15545,12 @@ Name: 1, dtype: float64</pre>
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>layer              6.000000
-stock_price     1008.993810
-phi               -0.845819
-psi              878.410086
-option_value      31.521853
-Name: 19, dtype: float64</pre>
+<pre>layer                    5
+stock_price     1008.99381
+phi               0.850065
+psi            -825.435329
+option_value     32.275042
+Name: 18, dtype: object</pre>
 </div>
 
 </div>
@@ -15475,12 +15591,12 @@ Name: 19, dtype: float64</pre>
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>layer              6.000000
-stock_price     1008.993810
-phi                0.154181
-psi             -151.932573
-option_value       2.443825
-Name: 19, dtype: float64</pre>
+<pre>layer                    5
+stock_price     1008.99381
+phi              -0.149935
+psi             153.664536
+option_value      2.381098
+Name: 18, dtype: object</pre>
 </div>
 
 </div>
@@ -15496,7 +15612,7 @@ Name: 19, dtype: float64</pre>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>For this, time $t_5$ is denoted by layer 6, which I call in each of the previous code blocks.  We can see the stock is worth $\$1008.99$ with the call and put worth $\$31.52$ and $\$2.44$, respectively.  We can see the long call requires a hedged portfolio of short $0.85$ shares and long $\$878.41$ in the money market.  The long put requires long $0.15$ shares and short $\$151.93$ in the money market.  It is easily seen that the shares traded relative to the call and put adds to $1$, representing the greek delta of the option.</p>
+<p>For this, time $t_5$ is denoted by layer 5, which I call in each of the previous code blocks.  We can see the stock is worth $\$1008.99$ with the call and put worth $\$32.28$ and $\$2.38$, respectively.  We can see the long call requires a hedged portfolio of $0.85$ shares and $\$825.43$ in the money market.  The long put requires $0.15$ shares and $\$153.66$ in the money market.  It is easily seen that the shares traded relative to the call and put adds to $1$, representing the greek delta of the option.</p>
 
 </div>
 </div>
@@ -15519,7 +15635,7 @@ Name: 19, dtype: float64</pre>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>We see the call is wortth $\$3.52$ and the put is worth $\$28.52$, a complete role reversal vs the $5\%$ interest in the previous case.  We see the absolute value of the $\phi$'s still sum to one in both time instances, indicating the put-call parity is holding</p>
+<p>We see the call is wortth $\$3.60$ and the put is worth $\$28.60$, a complete role reversal vs the $5\%$ interest in the previous case.  We see the absolute value of the $\phi$'s still sum to one in both time instances, indicating the put-call parity is holding.  The option statistics for time-step 5 are also included.</p>
 
 </div>
 </div>
@@ -15533,7 +15649,7 @@ Name: 19, dtype: float64</pre>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># repeat part a</span>
-<span class="n">r0_tree_c</span> <span class="o">=</span> <span class="n">build_tree</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span> <span class="n">s0</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1025</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">option_type</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+<span class="n">r0_tree_c</span> <span class="o">=</span> <span class="n">build_tree</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">s0</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1025</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">option_type</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
 <span class="n">r0_tree_c</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span>
 </pre></div>
 
@@ -15552,18 +15668,34 @@ Name: 19, dtype: float64</pre>
 <div class="jp-OutputArea-child">
 
     
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+<pre>C:\Users\jdean\AppData\Local\Programs\Python\Python39\lib\site-packages\pandas\core\indexing.py:1732: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  self._setitem_single_block(indexer, value, name)
+</pre>
+</div>
+</div>
+
+<div class="jp-OutputArea-child">
+
+    
     <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
 
 
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>layer              1.000000
-stock_price     1000.000000
-phi               -0.215706
-psi              217.928770
-option_value       3.517134
-Name: 1, dtype: float64</pre>
+<pre>layer                  0
+stock_price       1000.0
+phi             0.217913
+psi            -214.3112
+option_value    3.602071
+Name: 0, dtype: object</pre>
 </div>
 
 </div>
@@ -15581,7 +15713,7 @@ Name: 1, dtype: float64</pre>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># repeat part b</span>
-<span class="n">r0_tree_p</span> <span class="o">=</span> <span class="n">build_tree</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span> <span class="n">s0</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1025</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">option_type</span><span class="o">=</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
+<span class="n">r0_tree_p</span> <span class="o">=</span> <span class="n">build_tree</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">s0</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1025</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">option_type</span><span class="o">=</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
 <span class="n">r0_tree_p</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span>
 </pre></div>
 
@@ -15606,12 +15738,12 @@ Name: 1, dtype: float64</pre>
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>layer              1.000000
-stock_price     1000.000000
-phi                0.784294
-psi             -751.071230
-option_value      28.517134
-Name: 1, dtype: float64</pre>
+<pre>layer                   0
+stock_price        1000.0
+phi             -0.782087
+psi              810.6888
+option_value    28.602071
+Name: 0, dtype: object</pre>
 </div>
 
 </div>
@@ -15658,20 +15790,20 @@ Name: 1, dtype: float64</pre>
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>---------- call ----------
-layer              6.000000
-stock_price     1008.993810
-phi               -0.304151
-psi              310.389003
-option_value       5.344158
-Name: 19, dtype: float64
+layer                     6
+stock_price     1005.966828
+phi                 0.26881
+psi              -265.88962
+option_value       4.524259
+Name: 24, dtype: object
  
 ---------- put ----------
-layer              6.000000
-stock_price     1008.993810
-phi                0.695849
-psi             -676.544654
-option_value      21.350348
-Name: 19, dtype: float64
+layer                     6
+stock_price     1005.966828
+phi                -0.73119
+psi               759.11038
+option_value       23.55743
+Name: 24, dtype: object
 </pre>
 </div>
 </div>
