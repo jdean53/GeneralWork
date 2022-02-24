@@ -15760,10 +15760,10 @@ Name: 0, dtype: object</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#repeat part c</span>
-<span class="n">t5_r0_tree_c</span> <span class="o">=</span> <span class="n">r0_tree_c</span><span class="p">[</span><span class="n">r0_tree_c</span><span class="p">[</span><span class="s1">&#39;layer&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">6</span><span class="p">]</span>
-<span class="n">t5_r0_tree_p</span> <span class="o">=</span> <span class="n">r0_tree_p</span><span class="p">[</span><span class="n">r0_tree_p</span><span class="p">[</span><span class="s1">&#39;layer&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">6</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_r0_tree_c</span> <span class="o">=</span> <span class="n">r0_tree_c</span><span class="p">[</span><span class="n">r0_tree_c</span><span class="p">[</span><span class="s1">&#39;layer&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">5</span><span class="p">]</span>
+<span class="c1">#repeat part c</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---------- call ----------&#39;</span><span class="p">)</span>
+<span class="n">t5_r0_tree_p</span> <span class="o">=</span> <span class="n">r0_tree_p</span><span class="p">[</span><span class="n">r0_tree_p</span><span class="p">[</span><span class="s1">&#39;layer&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">5</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">t5_r0_tree_c</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">3</span><span class="p">,:])</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---------- put ----------&#39;</span><span class="p">)</span>
@@ -15790,20 +15790,20 @@ Name: 0, dtype: object</pre>
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>---------- call ----------
-layer                     6
-stock_price     1005.966828
-phi                 0.26881
-psi              -265.88962
-option_value       4.524259
-Name: 24, dtype: object
+layer                    5
+stock_price     1008.99381
+phi               0.305971
+psi            -303.272493
+option_value      5.450427
+Name: 18, dtype: object
  
 ---------- put ----------
-layer                     6
-stock_price     1005.966828
-phi                -0.73119
-psi               759.11038
-option_value       23.55743
-Name: 24, dtype: object
+layer                    5
+stock_price     1008.99381
+phi              -0.694029
+psi             721.727507
+option_value     21.456617
+Name: 18, dtype: object
 </pre>
 </div>
 </div>
