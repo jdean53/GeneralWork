@@ -19,7 +19,7 @@ def walk_params(u,d,T,N):
     return mu, sigma
 
 '''Prices a european option with a binomial self-combining tree -- CRR Model'''
-def build_tree(N, T, mu, sigma, s0, k, r, option_type):
+def build_tree(N, T, mu, sigma, s0, k, r, option_type, nature):
     '''Required Packages'''
     import numpy as np
     import pandas as pd
@@ -73,10 +73,13 @@ def build_tree(N, T, mu, sigma, s0, k, r, option_type):
     
     '''Calculates option value and replicating portfolio going backwards'''
     for i in reversed(range(N)):
-        tree.iloc[range(node-i-2,node-1),4] = (1 / (1+r*dt)) * (q * tree.iloc[range(node,node+i+1),4].to_numpy() + (1-q) * tree.iloc[range(node-1,node+i),4].to_numpy()) # price option
+        price_range = (1 / (1+r*dt)) * (q * tree.iloc[range(node,node+i+1),4].to_numpy() + (1-q) * tree.iloc[range(node-1,node+i),4].to_numpy()) # price option
+        if nature == 'european':
+            tree.iloc[range(node-i-2,node-1),4] = price_range
+        elif nature == 'american':
+            tree.iloc[range(node-i-2,node-1),4] = np.maximum(price_range, tree.iloc[range(node-i-2,node-1),4].to_numpy())
         tree.iloc[range(node-i-2,node-1),2] = (tree.iloc[range(node,node+i+1),4].to_numpy() - tree.iloc[range(node-1,node+i),4].to_numpy()) / (tree.iloc[range(node,node+i+1),1].to_numpy() - tree.iloc[range(node-1,node+i),1].to_numpy()) # get delta
         tree.iloc[range(node-i-2,node-1),3] = (tree.iloc[range(node,node+i+1),4].to_numpy() - tree.iloc[range(node-i-2,node-1),2].to_numpy() * tree.iloc[range(node,node+i+1),1].to_numpy()) / (1 + r*dt) # Money Market
         node = node - i - 1
-
 
     return tree
