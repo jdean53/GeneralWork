@@ -2,6 +2,10 @@
 This script consists of completed functions I write within the Sto Cal II class
 '''
 
+'''
+NOTE: walk_params and build_tree come from Homework 1 & 3
+'''
+
 '''Given an Up and Down factor (and Time), will output the binomial tree mu and sigma params'''
 def walk_params(u,d,T,N):
     '''Required Packages'''
@@ -84,6 +88,10 @@ def build_tree(N, T, mu, sigma, s0, k, r, option_type, nature):
 
     return tree
 
+'''
+NOTE: asset_data, maturity, and rates_data comes from Homework 4
+'''
+
 def asset_data(ticker, start_date, end_date):
     '''
     Function Designed to Pull Equity Data
@@ -142,3 +150,22 @@ def rates_data():
     rates = yf.download('^tnx', datetime.datetime.today())
     rf = rates['Adj Close'][0] / 100
     return rf
+
+def estimate_params(M, data):
+    '''
+    Function designed to estimate Mu and Sigma parameters for use in Option Pricing
+    ---
+    M - Sample Size to consider
+    data - Asset DataFrame pulled from Asset_Data() function
+    '''
+
+    dt = 1/252                                              # 1 day timestep
+    
+    y = np.log(1 + data['Adj Close'].pct_change())[-M:]     # Log Returns
+    
+    sigma_sq = np.var(y) / dt
+    sigma = np.sqrt(sigma_sq)                               # Sigma Estimator
+
+    mu = np.mean(y) / dt + 0.5*sigma_sq                     # Mu Estimator
+    
+    return mu, sigma
