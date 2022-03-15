@@ -8,16 +8,17 @@ NOTE: walk_params and build_tree come from Homework 1 & 3
 
 '''Given an Up and Down factor (and Time), will output the binomial tree mu and sigma params'''
 def walk_params(u,d,T,N):
-    '''Required Packages'''
+    '''
+    Given up/down factors and Time Step info, calculates the drift and vol term for a binomial recombinding tree
+    ---
+    u - up term (NOTE: Function will add one to this, so to double a number on up input 1 (1x+1=2x))  
+    d - down term (NOTE: Function subtracts this from 1, so to halve a number input 0.5)  
+    T - Time to Maturity (in years)  
+    N - Time Steps
+    '''
     import numpy as np
-
-    '''get time step'''
     dt = T/N
-
-    '''get mean'''
     mu = (np.log(1+u) + np.log(1-d)) / (2*dt)
-    
-    '''get variance'''
     sigma = (np.log(1+u) - mu*dt) / (np.sqrt(dt))
 
     return mu, sigma
@@ -96,8 +97,8 @@ def asset_data(ticker, start_date, end_date):
     '''
     Function Designed to Pull Equity Data
     ----
-    ticker - Ticker of desired equity
-    start_date -  Date to start pulling data from
+    ticker - Ticker of desired equity  
+    start_date -  Date to start pulling data from  
     end_data - Date to end data pull, typically today
     '''
     import datetime
@@ -122,8 +123,8 @@ def maturity(timedelta, asset):
     '''
     Function Designed to find option expiry closest to desired expiry
     ----
-    timedelta - time until expiry (EXPRESSED IN YEARS)
-    asset - yfinance.ticker.Ticker object whos options are being analyzed
+    timedelta - time until expiry (EXPRESSED IN YEARS)  
+    asset - yfinance.ticker.Ticker object whos options are being analyzed  
     '''
     import datetime
 
@@ -140,13 +141,13 @@ def maturity(timedelta, asset):
     return expiry, years_to_expiry
 
 def rates_data():
+    '''
+    Function designed to pull current yield on the US 10 year note  
+    NOTE: Pulls the value as a number, not a percentage
+    '''
     import yfinance as yf
     import datetime
     import pandas as pd
-    '''
-    Function designed to pull current yield on the US 10 year note
-    NOTE: Pulls the value as a number, not a percentage
-    '''
     rates = yf.download('^tnx', datetime.datetime.today())
     rf = rates['Adj Close'][0] / 100
     return rf
@@ -155,10 +156,11 @@ def estimate_params(M, data):
     '''
     Function designed to estimate Mu and Sigma parameters for use in Option Pricing
     ---
-    M - Sample Size to consider
-    data - Asset DataFrame pulled from Asset_Data() function
+    M - Sample Size to consider  
+    data - Asset DataFrame pulled from Asset_Data() function  
     '''
-
+    import numpy as np
+    import pandas as pd
     dt = 1/252                                              # 1 day timestep
     
     y = np.log(1 + data['Adj Close'].pct_change())[-M:]     # Log Returns
