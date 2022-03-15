@@ -84,7 +84,6 @@ def build_tree(N, T, mu, sigma, s0, k, r, option_type, nature):
 
     return tree
 
-
 def asset_data(ticker, start_date, end_date):
     '''
     Function Designed to Pull Equity Data
