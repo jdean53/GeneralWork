@@ -83,3 +83,63 @@ def build_tree(N, T, mu, sigma, s0, k, r, option_type, nature):
         node = node - i - 1
 
     return tree
+
+
+def asset_data(ticker, start_date, end_date):
+    '''
+    Function Designed to Pull Equity Data
+    ----
+    ticker - Ticker of desired equity
+    start_date -  Date to start pulling data from
+    end_data - Date to end data pull, typically today
+    '''
+    import datetime
+    import yfinance as yf
+    import pandas as pd
+    if type(start_date) == datetime.datetime:
+        start_date = start_date.strftime('%Y-%m-%d')
+    else:
+        pass
+    
+    if type(end_date) == datetime.datetime:
+        end_date = end_date.strftime('%Y-%m-%d')
+    else:
+        pass
+
+    asset = yf.Ticker(ticker)
+    data = yf.download(ticker, start_date, end_date)                                # Pull Data
+    
+    return asset, data
+
+def maturity(timedelta, asset):
+    '''
+    Function Designed to find option expiry closest to desired expiry
+    ----
+    timedelta - time until expiry (EXPRESSED IN YEARS)
+    asset - yfinance.ticker.Ticker object whos options are being analyzed
+    '''
+    import datetime
+
+    days = timedelta*365                                                            # Time Expressed in years converted to days
+    expiries = asset.options
+    distance = []
+    for expiry in expiries:                                                         # Calculate Distance from Desired Expiry
+        distance.append(abs(datetime.datetime.strptime(expiry, '%Y-%m-%d') - 
+                    (datetime.datetime.today() + 
+                    datetime.timedelta(days))))
+
+    expiry = expiries[distance.index(min(distance))]                                # Use minimum distance
+    years_to_expiry = float((datetime.datetime.strptime(expiry, '%Y-%m-%d') - datetime.datetime.today()).days) / 365
+    return expiry, years_to_expiry
+
+def rates_data():
+    import yfinance as yf
+    import datetime
+    import pandas as pd
+    '''
+    Function designed to pull current yield on the US 10 year note
+    NOTE: Pulls the value as a number, not a percentage
+    '''
+    rates = yf.download('^tnx', datetime.datetime.today())
+    rf = rates['Adj Close'][0] / 100
+    return rf
