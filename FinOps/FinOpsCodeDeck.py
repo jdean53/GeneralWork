@@ -217,4 +217,21 @@ def solve_portfolio(portfolio, bonds_df):
     final_dec.index.name = 'Bond'
     
     return final_dec, sp_df
+
+def derive_term_structure(sp_df):
+    '''
+    Derives implied term structure of interest rates given portfolio dedication shadow prices  
+    ---
+    Parameters:  
+    sp_df (DataFrame): shadow price dataframe  
+    ---
+    Returns:  
+    implied Rates (list): implied term structure of interest rates indexed from 0, list of floats
+    '''
+    shadow_prices = sp_df['shadow_price'].to_list()
+    implied_rates = [0]
     
+    for i in range(len(shadow_prices)):
+        implied_rates.append(1 / (shadow_prices[i] ** (1/(i+1))) - 1)
+
+    return implied_rates
