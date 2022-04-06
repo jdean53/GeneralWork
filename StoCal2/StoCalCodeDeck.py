@@ -171,3 +171,74 @@ def estimate_params(M, data):
     mu = np.mean(y) / dt + 0.5*sigma_sq                     # Mu Estimator
     
     return mu, sigma
+
+
+'''bsm related functions'''
+
+def price_bsm(s0, k, r, t, sigma):
+    '''
+    Prices a European Call Option using the Black-Scholes Formula
+    ---  
+    Parameters:  
+    s0 - Current stock price
+    k - strike price
+    r - risk-free interest rate (per annum)
+    t - time to maturity, in years
+    sigma - asset volatitly  
+    ---  
+    Returns:  
+    price (float) - Price of the option  
+    '''
+    import numpy as np
+    from scipy.stats import norm
+    d_plus = (np.log(s0/k) + (r + ((sigma ** 2) / 2)) * t) / (sigma * np.sqrt(t))
+    d_less = (np.log(s0/k) + (r - ((sigma ** 2) / 2)) * t) / (sigma * np.sqrt(t))
+    price = norm.cdf(d_plus) * s0 - norm.cdf(d_less) * k * np.exp(-r * t)
+
+    return price
+
+def put_call_parity(option_price, option_type, s0, k, r, t):
+    '''
+    Uses the price of a european option to return its opposite's price
+    ---
+    option_price - price of given option
+    option_type - type of given option ('p' for put and 'c' for call)
+    s0 - current asset price
+    k - strike price
+    r - risk-free interest rate (per annum)
+    t - time to maturity, in years
+    '''
+    import numpy as np
+    if option_type == 'c':
+        price = - s0 + np.exp(-r * t)*k + option_price
+    elif option_type == 'p':
+        price = s0 - np.exp(-r * t)*k + option_price 
+    
+    return price
+
+def bsm_greeks(s0, k, r, t, sigma):
+    '''
+    Uses the Black-Scholes formula to estimate the 5 major greeks (delta, gamma, theta, vega, rho)  
+    ---  
+    Parameters:  
+    s0 (float) - Current stock price  
+    k (float) - strike price  
+    r (float) - risk-free interest rate (per annum)  
+    t (float) - time to maturity, in years  
+    sigma (float) - asset volatitly  
+    ---  
+    Returns:  
+    greeks (dataframe) - calculated greeks in a dataframe indexed by name  
+    '''
+    import pandas as pd                                
+    import numpy as np
+    from scipy.stats import norm
+    greeks = pd.DataFrame(index=['delta','gamma','theta','vega','rho'],columns=['greeks'])
+    d_plus = (np.log(s0/k) + (r + ((sigma ** 2) / 2)) * t) / (sigma * np.sqrt(t))
+    d_less = (np.log(s0/k) + (r - ((sigma ** 2) / 2)) * t) / (sigma * np.sqrt(t))
+    greeks.loc['delta'] = norm.cdf(d_plus)
+    greeks.loc['gamma'] = (1 / (np.sqrt(t) * sigma * s0)) * norm.pdf(d_plus)
+    greeks.loc['theta'] = (((-1)*s0) / (2 * np.sqrt(t))) * norm.pdf(d_plus) - (r * k * np.exp((-r) * t) * norm.cdf(d_less))
+    greeks.loc['vega'] = s0 * np.sqrt(t) * norm.pdf(d_plus)
+    greeks.loc['rho'] = np.sqrt(t) * k * np.exp((-1) * r * t) * norm.cdf(d_less)
+    return greeks
