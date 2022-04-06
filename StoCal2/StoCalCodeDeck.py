@@ -11,6 +11,7 @@ def walk_params(u,d,T,N):
     '''
     Given up/down factors and Time Step info, calculates the drift and vol term for a binomial recombinding tree
     ---
+    Parameters:  
     u - up term (NOTE: Function will add one to this, so to double a number on up input 1 (1x+1=2x))  
     d - down term (NOTE: Function subtracts this from 1, so to halve a number input 0.5)  
     T - Time to Maturity (in years)  
