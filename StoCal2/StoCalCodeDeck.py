@@ -12,10 +12,14 @@ def walk_params(u,d,T,N):
     Given up/down factors and Time Step info, calculates the drift and vol term for a binomial recombinding tree
     ---
     Parameters:  
-    u - up term (NOTE: Function will add one to this, so to double a number on up input 1 (1x+1=2x))  
-    d - down term (NOTE: Function subtracts this from 1, so to halve a number input 0.5)  
-    T - Time to Maturity (in years)  
-    N - Time Steps
+    u - (float) up term (NOTE: Function will add one to this, so to double a number on up input 1 (1x+1=2x))  
+    d - (float) down term (NOTE: Function subtracts this from 1, so to halve a number input 0.5)  
+    T - (float) Time to Maturity (in years)  
+    N - (int) Time Steps  
+    ---
+    Returns:  
+    mu - (float) Estimated drift parameter  
+    simgma - (float) Estimated vol parameter
     '''
     import numpy as np
     dt = T/N
@@ -26,6 +30,23 @@ def walk_params(u,d,T,N):
 
 '''Prices a european option with a binomial self-combining tree -- CRR Model'''
 def build_tree(N, T, mu, sigma, s0, k, r, option_type, nature):
+    '''
+    Builds a self combining stock-price tree used to price an option  
+    ---  
+    Parameters:  
+    N - (int) Number of periods  
+    T - (float) time (in years)  
+    mu - (float) drift parameter (can be calculated using walk_params())  
+    sigma - (float) vol parameter (can be calculated using walk_params())  
+    s0 - (float) current stock price  
+    k - (int) option strike price  
+    r - (float) money-market interest rate  
+    option_type - (str) Call or Put option (input 'c' or 'p')  
+    nature - (str) European or American Option (input 'american' or 'european')  
+    ---  
+    Returns:  
+    tree - (DataFrame) Option tree as a df
+    '''
     '''Required Packages'''
     import numpy as np
     import pandas as pd
