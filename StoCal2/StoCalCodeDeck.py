@@ -47,6 +47,7 @@ def build_tree(N, T, mu, sigma, s0, k, r, option_type, nature):
     Returns:  
     tree - (DataFrame) Option tree as a df
     '''
+
     '''Required Packages'''
     import numpy as np
     import pandas as pd
@@ -118,10 +119,15 @@ NOTE: asset_data, maturity, and rates_data comes from Homework 4
 def asset_data(ticker, start_date, end_date):
     '''
     Function Designed to Pull Equity Data
-    ----
-    ticker - Ticker of desired equity  
-    start_date -  Date to start pulling data from  
-    end_data - Date to end data pull, typically today
+    ----  
+    Parameters:  
+    ticker - (str) Ticker of desired equity  
+    start_date - (str) Date to start pulling data from  
+    end_data - (str) Date to end data pull, typically today  
+    ---  
+    Returns:  
+    asset - 
+    data - 
     '''
     import datetime
     import yfinance as yf
@@ -145,9 +151,15 @@ def maturity(timedelta, asset):
     '''
     Function Designed to find option expiry closest to desired expiry
     ----
-    timedelta - time until expiry (EXPRESSED IN YEARS)  
-    asset - yfinance.ticker.Ticker object whos options are being analyzed  
-    '''
+    Parameters:  
+    timedelta - (float) time until expiry (EXPRESSED IN YEARS)  
+    asset - (yfinance.ticker.Ticker) yfinance object whos options are being analyzed (use asset_data() function)  
+    --- 
+    Returns:  
+    expiry - 
+    years_to_maturity - 
+    '''  
+    
     import datetime
 
     days = timedelta*365                                                            # Time Expressed in years converted to days
