@@ -235,3 +235,44 @@ def derive_term_structure(sp_df):
         implied_rates.append(1 / (shadow_prices[i] ** (1/(i+1))) - 1)
 
     return implied_rates
+
+
+'''
+Assorted Math Functions
+'''
+
+def downside_semi_variance(data):
+    '''
+    Returns the Downside Semi Variance of the Data Set  
+    ---  
+    Parameters:  
+    data - (np array) Data array to calculate the dsv  
+    ---  
+    Returns:  
+    dsv - (float) Downside Semi Variance
+    '''
+    vals = np.where(data - np.mean(data) < 0, data - np.mean(data), 0)
+    dsv = (1/len(data))*np.sum(np.square(vals))
+    return dsv
+
+def positive_semi_definite(A, print_result=True):
+    '''
+    Tests if the Matrix A is positive semidefinite  
+    ---
+    Parameters:  
+    A - (matrix-like) Square matrix to be tests  
+    print_result - (bool) Prints result for presentation (default True)
+    ---
+    Returns:  
+    psd - (bool) True if PSD, else false [ONLY RETURNS WHEN print_result=False]
+    '''
+    import numpy.linalg as npl
+    eigen = npl.eig(A)[0] >= 0
+    psd = sum(eigen) == len(A)
+    if print_result:
+        if psd:
+            print('The given matrix is Positive Semi Definite')
+        else:
+            print('The matrix is not Positive Semi Definite')
+    else:
+        return psd
