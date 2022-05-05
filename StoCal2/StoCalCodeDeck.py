@@ -391,3 +391,139 @@ def bsm_greeks(s0, k, r, t, sigma):
     greeks.loc['vega'] = s0 * np.sqrt(t) * norm.pdf(d_plus)
     greeks.loc['rho'] = np.sqrt(t) * k * np.exp((-1) * r * t) * norm.cdf(d_less)
     return greeks
+    
+
+'''Multi-Stock Functions'''
+
+def multi_stock_data(tick_list, start_date, end_date):
+    '''
+    Pulls Adjusted Closing Price for Equity Ticker List  
+    ---  
+    Parameters:  
+    tick_list - (list) List of Equities  
+    start_date - (str) Date to start pulling data from  
+    end_data - (str) Date to end data pull, typically today 
+    ---
+    Returns:  
+    df - (DataFrame) DataFrame of Adjusted Closing Prices
+    '''
+    import yfinance as yf
+    import pandas as pd
+
+    df = pd.DataFrame()
+    
+    for ticker in tick_list:
+        df[ticker] = yf.download(ticker, start_date, end_date)['Adj Close']
+    
+    return df
+
+def estimate_params_multi_stock(tick_list, df, M):
+    '''
+    Estimates Drift, Vol, and Correlation parameters for a Multi Stock B Model  
+    Feeds functions for parameter estimation of Multi Stock W Model
+    ---  
+    Parameters:  
+    tick_list - (list) List of Equities  
+    df - (DataFrame) Adjusted Closing Prices of Equities listed (pulled from multi_stock_data() function)  
+    M - (int) Lookback period (in trading days)  
+    ---
+    Returns:  
+    estimates - (DataFrame) Drift and Vol estimates  
+    rho - (DataFrame) Correlation Matrix  
+    '''
+    import pandas as pd
+    import numpy as np
+
+    if M > len(df):
+        M = len(df)
+    else:
+        pass
+
+    y_df = np.log(df) - np.log(df.shift(1))
+    estimates = pd.DataFrame(columns=tick_list,index=['drift','vol'])
+    
+    for ticker in tick_list:
+        prices = df[ticker]
+        y = y_df[ticker][-M:]
+        sigma_sq = np.var(y) * 252
+        sigma = np.sqrt(sigma_sq)
+        mu = np.mean(y) * 252 + 0.5*sigma_sq
+        estimates[ticker] = [mu, sigma]
+    
+    rho=y_df.corr()
+    
+    return estimates, rho
+
+def estimate_w_form_params(vol, rho):
+    '''
+    Estimates the Sigma Matrix of the W-Form of the Multi Stock Model  
+    ---
+    Parameters:  
+    vol - (pd.series) Volatility Vector  
+    rho - (DataFrame) B-Form Correlation Matrix  
+    Returns:  
+    Sigma - (np.array) Sigma Matrix of W-Form
+    '''
+    import pandas as pd
+    import numpy as np
+    
+    vol = vol.to_numpy()
+    rho = rho.to_numpy()
+    n = len(vol)
+    C = np.zeros((n,n))
+    
+    for i in range(0,n):
+        for j in range(0,n):
+            C[i,j] = rho[i,j] * vol[i] * vol[j]
+    
+    Sigma = np.linalg.cholesky(C)
+    
+    return Sigma
+
+def diversification_measure(vol, Sigma):
+    '''
+    Measures portfolio diversification according to estimates in B and W form of Multi Stock model  
+    ---  
+    Parameters:  
+    vol - (pd.series) B-Form Volatilities  
+    Sigma - (np.array) W-Form Volatilities  
+    ---  
+    Returns:  
+    R - (np.array) Diversification Matrix  
+    d - (float) Diversification measure
+    '''
+    import pandas as pd
+    import numpy as np
+    
+    vol = vol.to_numpy()
+    n = len(vol)
+    R = np.zeros((n,n))
+    
+    for i in range(0,n):
+        for j in range(0,n):
+            R[i,j] = Sigma[i,j] / vol[i]
+    
+    d = np.linalg.det(R) ** (1 / (n-1))
+    
+    return R, d
+
+def trading_pairs(tick_list, legs):
+    '''
+    Returns all possible trading pairs for a list of equities  
+    ---
+    Parameters:  
+    tick_list - (list) List of Equities to Pair  
+    legs - (int) Number of legs for each trade  
+    ---
+    Returns:  
+    Pairs - (list) List of trading pairs (list of tuples)
+    '''
+    import itertools
+    
+    if legs > len(tick_list):
+        legs = len(tick_list)
+    
+    pairs = list(itertools.combinations(tick_list, r=legs))
+    
+    return pairs
+
